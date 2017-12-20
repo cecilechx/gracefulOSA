@@ -15,6 +15,8 @@ import datetime
 import matplotlib.pyplot as plt
 import platform
 
+
+print('Hello!')
 #Set OSA Sensitivity (with time for each in parenthesis)
 # 0 = Norm Range Hold (7   sec) # Don't use this one! It's terrible!!!
 # 1 = Norm Range Auto (10  sec)
@@ -28,7 +30,7 @@ val_sens = int(1)
 ExtinguishAngle = 57.1  # Angle at which minimum power occurs
 MaxPower        = 202.2 # Maximum Power through half wave plate
 MinPower        = 0.9   # Minimum Power through half wave plate (power measured at ExtinguishAngle)
-NumOfPoints     = 100    # number of data points (different power) to be collected 
+NumOfPoints     = 50    # number of data points (different power) to be collected 
 
 powerarray = np.linspace(MaxPower, MinPower, NumOfPoints)
 
@@ -64,7 +66,7 @@ bits, version = platform.architecture()
 print('Detected %s Python on %s. Loading %s DLLs'%(bits, version, bits))
 
 dllname = os.path.join(os.path.dirname(__file__), 'dll%s'%bits[:2], 'Thorlabs.MotionControl.IntegratedStepperMotors.dll')
-os.environ['PATH'] = os.path.join(os.path.dirname(__file__), 'dll%s'%bits[:2]) + ';' + os.environ['PATH']
+os.environ['PATH'] =   os.environ['PATH'] + ';' + os.path.join(os.path.dirname(__file__), 'dll%s'%bits[:2])
 
 if not os.path.exists(dllname):
     raise ValueError('DLL Not found! dllname=%s'%dllname)
@@ -301,7 +303,7 @@ for count, (degree) in enumerate(degree[::]):
     # plt.plot(t_wave,t_level)
 
 
-#print 'Moving Back to Position Zero'
-#MoveToPosition(SN,0)
+print('Moving Back to Max Power')
+MoveToPosition(SN, abs(int((ExtinguishAngle+45)*conversion)))
 print('Power scan complete!')
 p.ISC_Close(SN)
